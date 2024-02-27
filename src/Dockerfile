@@ -1,5 +1,7 @@
-FROM python:3.6-alpine3.14
+FROM python:3.9-alpine3.16
 WORKDIR /app
-COPY ./requirements.txt ./
-RUN pip install -r requirements.txt
-CMD ["python", "app.py"]
+
+COPY ./requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+CMD ["uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "80", "--reload"]
