@@ -6,8 +6,8 @@ services:
     tty: true
     container_name: python_app
     ports:
-      - 80:1000
-    volumes:
-      - ./src/app:/app
+      - 1000:80
+    # volumes:
+    #   - ./src/app:/app
     env_file:
       - ./src/.env

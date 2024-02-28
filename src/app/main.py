@@ -2,8 +2,8 @@ from typing import Union
 
 from fastapi import FastAPI, Query
 
-from dates import transform_date
-from config import title
+from .dates import transform_date
+from .config import title
 
 app = FastAPI(title=title)
 
