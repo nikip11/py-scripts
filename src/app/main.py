@@ -4,8 +4,12 @@ from fastapi import FastAPI, Query
 
 from .dates import transform_date
 from .config import title
+import warnings
 
 app = FastAPI(title=title)
+
+# Desactiva la advertencia específica
+warnings.filterwarnings("ignore", category=UserWarning, module="tzlocal")
 
 @app.get("/")
 def read_root():
