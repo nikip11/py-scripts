@@ -33,8 +33,5 @@ def test_dates():
     response = []
     for d in dates:
         final_date = transform_date(d)
-        response.append({
-            "origin": d,
-            "final": final_date
-        })
+        response.append(final_date)
     return response
