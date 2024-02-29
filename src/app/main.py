@@ -1,6 +1,5 @@
 import warnings
 
-from typing import Union
 from fastapi import FastAPI, Query
 
 from .dates import transform_date
@@ -38,5 +37,4 @@ def test_dates():
             "origin": d,
             "final": final_date
         })
-    # order by None
     return response
