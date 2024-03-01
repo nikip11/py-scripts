@@ -2,9 +2,9 @@ import warnings
 
 from fastapi import FastAPI, Query
 
-from .dates import transform_date
+from .dates import transform_date, get_dates_from_file
 from .config import title
-from .testdates import dates
+# from .testdates import dates
 
 app = FastAPI(title=title)
 
@@ -29,9 +29,25 @@ def format_date(date: str, dateFormat: str = '%Y-%m-%d'):
 
 @app.get("/test-dates", tags=['dates'])
 def test_dates():
-    # get date on file
-    response = []
+    dates = get_dates_from_file()
+    # dates = [
+    #     "Día 16 Mes 07",
+    #     "21 / 07 / 2022"
+    # ]
+    responseOK = responseKO = []
     for d in dates:
         final_date = transform_date(d)
-        response.append(final_date)
-    return response
+        if final_date['formato_identificado'] is None :
+            responseKO.append(final_date)
+        else:
+            responseOK.append(final_date)
+    return {
+        "ko": {
+            "total": len(responseKO),
+            "data": responseKO
+        },
+        "ok": {
+            "total": len(responseOK),
+            "data": responseOK
+        }
+    }

@@ -2,16 +2,15 @@ import dateparser
 from fuzzywuzzy import process
 from unidecode import unidecode
 import re
+from pathlib import Path
 
-def identificar_formato_fecha(date: str, dateFormat: str = "%Y-%m-%d"):
+def identificar_formato_fecha(date: str, dateFormat: str = "%Y-%m-%d", lang: str = 'en'):
     try:
         settings = {'STRICT_PARSING': True}
-        parsed_date = dateparser.parse(date, settings=settings)
+        parsed_date = dateparser.parse(date, settings=settings, languages=[lang])
         return parsed_date.strftime(dateFormat)
     except (ValueError, AttributeError):
         return None
-
-
 
 
 # Función que pasando un texto transforma las fechas de mes y año en número
@@ -144,7 +143,7 @@ def transform_date(fecha: str, dateFormat: str = "%Y-%m-%d"):
         try:
             # Formato AAAA.MM.DD
             proceso = "AAAA.MM.DD"
-            # formato_identificado = formatear_fecha_simbolo(fecha)
+            formato_identificado = formatear_fecha_simbolo(fecha)
 
             if formato_identificado is None:
                 proceso = "fuzzywuzzy"
@@ -168,27 +167,14 @@ def transform_date(fecha: str, dateFormat: str = "%Y-%m-%d"):
     }
 
 
-if __name__ == "__main__":
-
-    """
-    Notas de dateparser:
-        - Si la fecha viene sin año pone el actual
-        - Si la fecha viene sin dia pone el actual
-    """
-
-    fechas = [
-        'veinte de marzo de dos mil veintidós',
-        'trece de agosto de dos mil veintiuno',
-        'diecisiete de diciembre de dos mil veinte',
-        'veintiséis de junio de dos mil diecinueve',
-        'cinco de septiembre de dos mil dieciocho',
-        'once de abril de dos mil diecisiete',
-        'veinticuatro de julio de dos mil dieciséis',
-        'nueve de febrero de dos mil quince',
-        'veintiocho de octubre de dos mil catorce',
-        'dieciocho de noviembre de dos mil trece'
-    ]
-
-    for fecha in fechas:
-        result = transform_date(fecha)
-        print(result)
+def get_dates_from_file():
+    file_path = '/app/app/ProFechEtiq.txt'
+    file_path_obj = Path(file_path)
+    
+    if not file_path_obj.is_file():
+        return {"error": "El archivo no existe."}
+    dates = []
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line in file:
+            dates.append(line.strip())
+    return dates
